@@ -11,3 +11,10 @@ with notification("test_event", test="Hello there!"):
    print "I am inside a with statement"
 
 notify("test_event")
+
+"""
+! print_me called !
+Yep, it's there:  Hello there!
+I am inside a with statement
+! print_me called !
+"""
