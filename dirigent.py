@@ -26,11 +26,11 @@ class ObserverClass(object):
             Returns a list of tuples (called object, result)
         """
         if asgenerator:
-            return (Result(observer, observer(*args, **kwargs)) for observer
-                    in self.observers[name])
+            return (Result(called=observer, result=observer(*args, **kwargs)
+                    ) for observer in self.observers[name])
         else:
-            return [Result(observer, observer(*args, **kwargs)) for observer
-                    in self.observers[name]]
+            return [Result(called=observer, result=observer(*args, **kwargs)
+                    ) for observer in self.observers[name]]
 
     __call__ = notify
 
@@ -70,10 +70,10 @@ def observe(name):
 
 
 class Result(object):
-    def __init__(self, called, result):
-        self.called = called
-        self.result = result
-
+    def __init__(self, *args,**kwargs):
+        for arg, value in kwargs.items():
+            setattr(self, arg, value)
+        
 
 # aliases
 notification = NotificationClass
