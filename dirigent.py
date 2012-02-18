@@ -21,14 +21,17 @@ class ObserverClass(object):
         if name in self.observers and func in self.observers[name]:
             self.observers[name].remove(func)
 
-    def notify(self, name, *args, **kwargs):
+    def notify(self, name, asgenerator=False,  *args, **kwargs):
         """ Notifies all registered observers of a registered event.
             Returns a list of tuples (called object, result)
         """
         Result = namedtuple('Result', 'called result')
-
-        return [Result(observer, observer(*args, **kwargs)) for observer
-                in self.observers[name]]
+        if asgenerator:
+            return (Result(observer, observer(*args, **kwargs)) for observer
+                    in self.observers[name])
+        else:
+            return [Result(observer, observer(*args, **kwargs)) for observer
+                    in self.observers[name]]
 
     __call__ = notify
 
