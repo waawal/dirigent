@@ -1,4 +1,4 @@
-from collections import defaultdict, namedtuple
+from collections import defaultdict
 
 
 __all__ = "notify", "observe"
@@ -25,7 +25,10 @@ class ObserverClass(object):
         """ Notifies all registered observers of a registered event.
             Returns a list of tuples (called object, result)
         """
-        Result = namedtuple('Result', 'called result')
+        class Result(object):
+            def __init__(self, called, result):
+                self.called = called
+                self.result = result
         if asgenerator:
             return (Result(observer, observer(*args, **kwargs)) for observer
                     in self.observers[name])
