@@ -41,6 +41,7 @@ class NotificationClass(object):
    """
    def __init__(self, name, before=None, after=None, *args, **kwargs):
        self.name = name
+       (self.before, self.after) = (False,)*2
        if before:
            self.before = True
        if after:
