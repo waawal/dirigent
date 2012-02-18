@@ -50,16 +50,7 @@ class NotificationClass(object):
 
 
 def observe(name):
-    """ Returns a Python decorator that attaches a callback to a observer.
-    >>> @observe('user_created')
-    >>> def hello(*arg):
-    >>>     if 34 in arg:
-    >>>         print "oh hai there"
-    >>> notify('user_created', 34)
-    oh hai there
-    [None]
-    >>> notify('user_created', 35)
-    [None]
+    """ A decorator that makes a function/method to a observer.
     """
     def wrapper(func):
         notify.register(name, func)
