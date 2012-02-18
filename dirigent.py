@@ -12,7 +12,7 @@ class ObserverClass(object):
     def register(self, name, func):
         ''' Register a callback for a event
         '''
-        self.observers.setdefault(name, []).append(func)
+        self.observers[name].append(func)
 
     def unregister(self, name, func):
         ''' Unregisters a event. '''
