@@ -25,10 +25,6 @@ class ObserverClass(object):
         """ Notifies all registered observers of a registered event.
             Returns a list of tuples (called object, result)
         """
-        class Result(object):
-            def __init__(self, called, result):
-                self.called = called
-                self.result = result
         if asgenerator:
             return (Result(observer, observer(*args, **kwargs)) for observer
                     in self.observers[name])
@@ -71,6 +67,13 @@ def observe(name):
         notify.register(name, func)
         return func
     return wrapper
+
+
+class Result(object):
+    def __init__(self, called, result):
+        self.called = called
+        self.result = result
+
 
 # aliases
 notification = NotificationClass
