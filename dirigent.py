@@ -1,3 +1,4 @@
+from collections import defaultdict
 
 
 __all__ = "notify", "observe"
@@ -5,11 +6,8 @@ __all__ = "notify", "observe"
 
 class ObserverClass(object):
     
-    _implemented = ("user_created", "user_updated", "user_removed",
-                    "group_created", "group_updated", "group_removed",
-                    "user_authenticated")
     def __init__(self):
-        self.observers = dict((name, []) for name in self._implemented)
+        self.observers = defaultdict(list)
         
     def register(self, name, func):
         ''' Register a callback for a event
@@ -31,7 +29,7 @@ class ObserverClass(object):
 
 
 class NotificationClass(object):
-   
+   # TODO: Should support *args and *kwargs
    def __init__(self, name, before=None, after=None):
        self.name = name
        if before:
@@ -70,5 +68,5 @@ def observe(name):
 # aliases
 notification = NotificationClass
 
-# Instantiating
+# Instantiatons
 notify = ObserverClass()
