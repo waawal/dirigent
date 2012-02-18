@@ -2,6 +2,7 @@
 
 __all__ = "notify", "observe"
 
+
 class ObserverClass(object):
     
     _implemented = ("user_created", "user_updated", "user_removed",
@@ -27,7 +28,27 @@ class ObserverClass(object):
         return [observer(*arg, **kw) for observer in observers]
 
     __call__ = notify
-notify = ObserverClass()
+
+
+class NotificationClass(object):
+   
+   def __init__(self, name, before=None, after=None):
+       self.name = name
+       if before:
+           self.before = True
+       if after:
+           self.after = True
+       if not before and not after:
+           self.before = True
+
+   def __enter__(self):
+       if self.before:
+           notify(self.name)
+
+   def __exit__(self, exctype, excvalue, traceback):
+       if not exctype and not excvalue and not traceback and self.after:
+           notify(self.name) 
+
 
 def observe(name):
     """ Returns a Python decorator that attaches a callback to a observer.
@@ -45,3 +66,9 @@ def observe(name):
         notify.register(name, func)
         return func
     return wrapper
+
+# aliases
+notification = NotificationClass
+
+# Instantiating
+notify = ObserverClass()
