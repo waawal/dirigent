@@ -20,10 +20,11 @@ class ObserverClass(object):
             self.observers[name].remove(func)
 
     def notify(self, name, *arg, **kw):
-        ''' Notifies all registered observers of an event
+        ''' Notifies all registered observers of a registered event.
+            Returns a list of tuples (called object, result)
         '''
-        observers = self.observers[name] # TODO: callables __repr__ with return
-        return [observer(*arg, **kw) for observer in observers]
+        return [(observer, observer(*arg, **kw)) for observer
+                in self.observers[name]]
 
     __call__ = notify
 
