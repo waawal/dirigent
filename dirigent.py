@@ -1,11 +1,12 @@
-from collections import defaultdict
+from collections import defaultdict, namedtuple
 
 
 __all__ = "notify", "observe"
 
 
 class ObserverClass(object):
-    
+
+
     def __init__(self):
         self.observers = defaultdict(list)
         
@@ -23,7 +24,9 @@ class ObserverClass(object):
         ''' Notifies all registered observers of a registered event.
             Returns a list of tuples (called object, result)
         '''
-        return [(observer, observer(*arg, **kw)) for observer
+        Result = namedtuple('Result', 'called result')
+
+        return [Result(observer, observer(*arg, **kw)) for observer
                 in self.observers[name]]
 
     __call__ = notify
