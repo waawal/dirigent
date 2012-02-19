@@ -9,7 +9,7 @@ class ObserverClass(object):
     """
     def __init__(self):
         self.observers = defaultdict(list)
-        
+
     def register(self, name, func):
         """ Register a callback for a event
         """
@@ -21,7 +21,7 @@ class ObserverClass(object):
         if name in self.observers and func in self.observers[name]:
             self.observers[name].remove(func)
 
-    def notify(self, name, asgenerator=False,  *args, **kwargs):
+    def notify(self, name, asgenerator=False, *args, **kwargs):
         """ Notifies all registered observers of a registered event.
             Returns a list of tuples (called object, result)
         """
@@ -36,28 +36,28 @@ class ObserverClass(object):
 
 
 class NotificationClass(object):
-   """ Implements the with-statement.
-   """
-   def __init__(self, name, before=None, after=None, *args, **kwargs):
-       self.name = name
-       (self.before, self.after) = (False,)*2
-       if before:
-           self.before = True
-       if after:
-           self.after = True
-       if not before and not after:
-           self.before = True
-           
-       self.args = args
-       self.kwargs = kwargs
+    """ Implements the with-statement.
+    """
+    def __init__(self, name, before=None, after=None, *args, **kwargs):
+        self.name = name
+        (self.before, self.after) = (False,) * 2
+        if before:
+            self.before = True
+        if after:
+            self.after = True
+        if not before and not after:
+            self.before = True
 
-   def __enter__(self):
-       if self.before:
-           notify(self.name, *self.args, **self.kwargs)
+        self.args = args
+        self.kwargs = kwargs
 
-   def __exit__(self, exctype, excvalue, traceback):
-       if not exctype and not excvalue and not traceback and self.after:
-           notify(self.name, *self.args, **self.kwargs) 
+    def __enter__(self):
+        if self.before:
+            notify(self.name, *self.args, **self.kwargs)
+
+    def __exit__(self, exctype, excvalue, traceback):
+        if not exctype and not excvalue and not traceback and self.after:
+            notify(self.name, *self.args, **self.kwargs)
 
 
 def observe(name):
@@ -70,10 +70,10 @@ def observe(name):
 
 
 class Result(object):
-    def __init__(self, *args,**kwargs):
+    def __init__(self, *args, **kwargs):
         for arg, value in kwargs.items():
             setattr(self, arg, value)
-        
+
 
 # aliases
 notification = NotificationClass
