@@ -1,5 +1,5 @@
-from collections import defaultdict
-from functools import wraps
+from contextlib import contextmanager
+from functools import wraps, partial
 
 __all__ = "notify", "observe"
 
@@ -9,7 +9,6 @@ class ObserverClass(object):
     """
     def __init__(self):
         self.observers = set()
-        self.contextargs = (tuple(), {})
 
     def register(self, func):
         """ Register a callback for a event
@@ -30,37 +29,41 @@ class ObserverClass(object):
 
     def __iter__(self):
         return (observer for observer in self.observers)
-
-    def __enter__(self):
-        return self.__iter__()
-
-    def __exit__(self, exctype, excvalue, traceback):
-        if not exctype and not excvalue and not traceback:
-            args, kwargs = self.contextargs
-            self.contextargs = (tuple(), {})
-            return self.notify(*args, **kwargs)
-
+        
     def __call__(self, *args, **kwargs):
-        if args and kwargs:
-            self.contextargs = (args or None, kwargs or {})
-        elif args:
-            self.contextargs = (args, {})
-        elif kwargs:
-            self.contextargs = (tuple(), kwargs)
-        return self
+        return (partial(observer, *args, **kwargs) for observer in self.observers)
 
 def observe(name):
     """ A decorator that makes a function/method to a observer.
     """
+    #@wraps(name)
     def wrapper(func):
-        @wraps(func)
         name.register(func)
         return func
     return wrapper
 
+@contextmanager
 def notification(name, *args, **kwargs):
-    yield
-    name.notify(*args, **kwargs)
+    try:
+        yield name(*args, **kwargs)
+    finally:
+        pass
+
+@contextmanager
+def notification_before(name, *args, **kwargs):
+    try:
+        name.notify(*args, **kwargs)
+        yield
+    finally:
+        pass
+
+@contextmanager
+def notification_after(name, *args, **kwargs):
+    try:
+        yield
+    finally:
+        name.notify(*args, **kwargs)
+                                    
 
 
 # aliases

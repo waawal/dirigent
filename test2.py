@@ -1,25 +1,29 @@
 import dirigent
 
 a = dirigent.notify()
-
-def b(ar=None):
+print "a is:", a.__class__.__name__
+def b(ar=None, **kwargs):
     print ar or "\nhello\n"
+    print kwargs
 
 a.register(b)
 
-a.notify("yo")
+#a.notify("yo")
 
 
-@dirigent.observe(a)
-def c(ar, ab="Nogo!"):
+#@dirigent.observe(a)
+def c(ar, ab="Nogo!", **kwargs):
     print "c func called", ar, ab
 
-for b in a:
-    b("from generator")
+#for b in a:
+#    b("from generator")
+
 wobs = dirigent.notify()
 
 wobs.register(c)
+wobs.register(b)
 
-with wobs("asd", ab="GOOOOO!") as hello:
+with dirigent.notification(wobs, "from contextmanager",after=True,  ab="GOOOOO!", l="ol") as hello:
    for g in hello:
-        print g
+        g(cat="mouse")
+   #print "in block"
