@@ -1,6 +1,6 @@
-from dirigent import subject
+from dirigent import pubsub
 
-q = subject()
+q = pubsub()
 
 def a(*args, **kwargs):
     print "a:", args, kwargs
@@ -8,14 +8,15 @@ def a(*args, **kwargs):
 def b(*args, **kwargs):
     print "b:", args, kwargs
 
-@q.observe
+@q.sub
 def c(*args, **kwargs):
     print "c:", args, kwargs
 
+@q.sub
 def d(*args, **kwargs):
     print "d:", args, kwargs
 
-q.register(a)
-q.register(b)
+q.sub(a)
+q.sub(b)
 
-q.notify("hello", world="sa")
+q.pub("hello", world="sa")

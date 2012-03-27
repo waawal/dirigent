@@ -15,8 +15,10 @@ class SubjectBase(object):
 
     def register(self, func):
         """ Register a callback for a event
+        Can be used as a decorator.
         """
         self.observers.add(func)
+        return func
 
     def unregister(self, func):
         """ Unregisters a event.
@@ -35,14 +37,8 @@ class SubjectBase(object):
     def __call__(self, *args, **kwargs):
         return (partial(observer, *args, **kwargs) for observer in self.observers)
 
-    def observe(self, func):
-        """ A decorator that registers a function/method as a observer to a subject.
-        """
-        self.register(func) 
-        return func   
-
     # Aliases
-    sub = subscribe = register
+    observe = sub = subscribe = register
     notify_listeners = pub = publish = notify
 
 
@@ -70,7 +66,7 @@ def notification_after(subject, *args, **kwargs):
 
      
 # Aliases
-subject = SubjectBase
+subject = pubsub = SubjectBase
 SubjectBase.observers = notification
 SubjectBase.before = notification_before
 SubjectBase.after = notification_after
