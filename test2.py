@@ -7,11 +7,19 @@ def b(ar=None):
 
 a.register(b)
 
-for b in a:
-    b("homer!")
+a.notify("yo")
+
 
 @dirigent.observe(a)
-def c(ar):
-    print "c func called", ar
+def c(ar, ab="Nogo!"):
+    print "c func called", ar, ab
 
-a.notify("yo")
+for b in a:
+    b("from generator")
+wobs = dirigent.notify()
+
+wobs.register(c)
+
+with wobs("asd", ab="GOOOOO!") as hello:
+   for g in hello:
+        print g

@@ -1,5 +1,5 @@
 from collections import defaultdict
-
+from functools import wraps
 
 __all__ = "notify", "observe"
 
@@ -9,6 +9,7 @@ class ObserverClass(object):
     """
     def __init__(self):
         self.observers = set()
+        self.contextargs = (tuple(), {})
 
     def register(self, func):
         """ Register a callback for a event
@@ -30,41 +31,37 @@ class ObserverClass(object):
     def __iter__(self):
         return (observer for observer in self.observers)
 
-
-class NotificationClass(object):
-    """ Implements the with-statement.
-    """
-    def __init__(self, name, before=False, after=False, *args, **kwargs):
-        self.name = name
-        self.before = self.after = False # Possible bug?
-        if before:
-            self.before = True
-        if after:
-            self.after = True
-        if not before and not after:
-            self.before = True
-
-        self.args = args
-        self.kwargs = kwargs
-
     def __enter__(self):
-        if self.before:
-            self.name.notify(*self.args, **self.kwargs)
+        return self.__iter__()
 
     def __exit__(self, exctype, excvalue, traceback):
-        if not exctype and not excvalue and not traceback and self.after:
-            self.name.notify(*self.args, **self.kwargs)
+        if not exctype and not excvalue and not traceback:
+            args, kwargs = self.contextargs
+            self.contextargs = (tuple(), {})
+            return self.notify(*args, **kwargs)
 
+    def __call__(self, *args, **kwargs):
+        if args and kwargs:
+            self.contextargs = (args or None, kwargs or {})
+        elif args:
+            self.contextargs = (args, {})
+        elif kwargs:
+            self.contextargs = (tuple(), kwargs)
+        return self
 
 def observe(name):
     """ A decorator that makes a function/method to a observer.
     """
     def wrapper(func):
+        @wraps(func)
         name.register(func)
         return func
     return wrapper
 
+def notification(name, *args, **kwargs):
+    yield
+    name.notify(*args, **kwargs)
+
 
 # aliases
-notification = NotificationClass
 notify = ObserverClass
