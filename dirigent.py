@@ -41,7 +41,7 @@ class ObserverClass(object):
 
 
 def observe(subject):
-    """ A decorator that adds a function/method as a observer to a subject.
+    """ A decorator that registers a function/method as a observer to a subject.
     """
     def wrapper(func):
         subject.register(func)
@@ -73,3 +73,6 @@ def notification_after(subject, *args, **kwargs):
      
 # Aliases
 subject = ObserverClass
+ObserverClass.notification = notification
+ObserverClass.notification_before = notification_before
+ObserverClass.notification_after = notification_after
