@@ -1,7 +1,11 @@
 from contextlib import contextmanager
 from functools import partial
 
-__all__ = "observers", "observe"
+__all__ = ("subject",
+           "observe",
+           "notification",
+           "notification_before",
+           "notification_after")
 
 
 class ObserverClass(object):
@@ -23,7 +27,6 @@ class ObserverClass(object):
 
     def notify(self, *args, **kwargs):
         """ Notifies all registered observers of a registered event.
-            Returns a list of tuples (called object, result)
         """
         return [observer(*args, **kwargs) for observer in self.observers]
 
@@ -32,38 +35,41 @@ class ObserverClass(object):
         
     def __call__(self, *args, **kwargs):
         return (partial(observer, *args, **kwargs) for observer in self.observers)
+        
+    # Aliases
+    notify_listeners = notify
 
-def observe(name):
-    """ A decorator that makes a function/method to a observer.
+
+def observe(subject):
+    """ A decorator that adds a function/method as a observer to a subject.
     """
     def wrapper(func):
-        name.register(func)
+        subject.register(func)
         return func
     return wrapper
 
 @contextmanager
-def notification(name, *args, **kwargs):
+def notification(subject, *args, **kwargs):
     try:
-        yield name(*args, **kwargs)
+        yield subject(*args, **kwargs)
     finally:
         pass
 
 @contextmanager
-def notification_before(name, *args, **kwargs):
+def notification_before(subject, *args, **kwargs):
     try:
-        name.notify(*args, **kwargs)
+        subject.notify(*args, **kwargs)
         yield
     finally:
         pass
 
 @contextmanager
-def notification_after(name, *args, **kwargs):
+def notification_after(subject, *args, **kwargs):
     try:
         yield
     finally:
-        name.notify(*args, **kwargs)
-                                    
+        subject.notify(*args, **kwargs)
 
-
-# aliases
+     
+# Aliases
 subject = ObserverClass
