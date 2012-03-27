@@ -1,24 +1,23 @@
 import dirigent
 
-a = dirigent.notify()
-print "a is:", a.__class__.__name__
+a = dirigent.subject()
 def b(ar=None, **kwargs):
     print ar or "\nhello\n"
     print kwargs
 
 a.register(b)
 
-#a.notify("yo")
+a.notify("yo")
 
 
-#@dirigent.observe(a)
+@dirigent.observe(a)
 def c(ar, ab="Nogo!", **kwargs):
     print "c func called", ar, ab
 
-#for b in a:
-#    b("from generator")
+for b in a:
+    b("from generator")
 
-wobs = dirigent.notify()
+wobs = dirigent.subject()
 
 wobs.register(c)
 wobs.register(b)

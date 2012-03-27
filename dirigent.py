@@ -1,7 +1,7 @@
 from contextlib import contextmanager
-from functools import wraps, partial
+from functools import partial
 
-__all__ = "notify", "observe"
+__all__ = "observers", "observe"
 
 
 class ObserverClass(object):
@@ -36,7 +36,6 @@ class ObserverClass(object):
 def observe(name):
     """ A decorator that makes a function/method to a observer.
     """
-    #@wraps(name)
     def wrapper(func):
         name.register(func)
         return func
@@ -67,4 +66,4 @@ def notification_after(name, *args, **kwargs):
 
 
 # aliases
-notify = ObserverClass
+subject = ObserverClass
