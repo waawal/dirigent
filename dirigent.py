@@ -8,7 +8,7 @@ __all__ = ("subject",
            "notification_after")
 
 
-class ObserverClass(object):
+class SubjectBase(object):
     """ Object holding all the observers, aliased to notify.
     """
     def __init__(self):
@@ -35,7 +35,8 @@ class ObserverClass(object):
         
     def __call__(self, *args, **kwargs):
         return (partial(observer, *args, **kwargs) for observer in self.observers)
-        
+
+
     # Aliases
     notify_listeners = notify
 
@@ -72,7 +73,7 @@ def notification_after(subject, *args, **kwargs):
 
      
 # Aliases
-subject = ObserverClass
-ObserverClass.notification = notification
-ObserverClass.notification_before = notification_before
-ObserverClass.notification_after = notification_after
+subject = SubjectBase
+SubjectBase.observers = notification
+SubjectBase.before = notification_before
+SubjectBase.after = notification_after
