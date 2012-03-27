@@ -8,39 +8,35 @@ class ObserverClass(object):
     """ Object holding all the observers, aliased to notify.
     """
     def __init__(self):
-        self.observers = defaultdict(list)
+        self.observers = set()
 
-    def register(self, name, func):
+    def register(self, func):
         """ Register a callback for a event
         """
-        self.observers[name].append(func)
+        self.observers.add(func)
 
-    def unregister(self, name, func):
+    def unregister(self, func):
         """ Unregisters a event.
         """
-        if name in self.observers and func in self.observers[name]:
-            self.observers[name].remove(func)
+        if func in self.observers:
+            self.observers.remove(func)
 
-    def notify(self, name, asgenerator=False, *args, **kwargs):
+    def notify(self, *args, **kwargs):
         """ Notifies all registered observers of a registered event.
             Returns a list of tuples (called object, result)
         """
-        if asgenerator:
-            return (Result(called=observer, result=observer(*args, **kwargs)
-                    ) for observer in self.observers[name])
-        else:
-            return [Result(called=observer, result=observer(*args, **kwargs)
-                    ) for observer in self.observers[name]]
+        return [observer(*args, **kwargs) for observer in self.observers]
 
-    __call__ = notify
+    def __iter__(self):
+        return (observer for observer in self.observers)
 
 
 class NotificationClass(object):
     """ Implements the with-statement.
     """
-    def __init__(self, name, before=None, after=None, *args, **kwargs):
+    def __init__(self, name, before=False, after=False, *args, **kwargs):
         self.name = name
-        (self.before, self.after) = (False,) * 2
+        self.before = self.after = False # Possible bug?
         if before:
             self.before = True
         if after:
@@ -53,30 +49,22 @@ class NotificationClass(object):
 
     def __enter__(self):
         if self.before:
-            notify(self.name, *self.args, **self.kwargs)
+            self.name.notify(*self.args, **self.kwargs)
 
     def __exit__(self, exctype, excvalue, traceback):
         if not exctype and not excvalue and not traceback and self.after:
-            notify(self.name, *self.args, **self.kwargs)
+            self.name.notify(*self.args, **self.kwargs)
 
 
 def observe(name):
     """ A decorator that makes a function/method to a observer.
     """
     def wrapper(func):
-        notify.register(name, func)
+        name.register(func)
         return func
     return wrapper
 
 
-class Result(object):
-    def __init__(self, *args, **kwargs):
-        for arg, value in kwargs.items():
-            setattr(self, arg, value)
-
-
 # aliases
 notification = NotificationClass
-
-# Instantiatons
-notify = ObserverClass()
+notify = ObserverClass
