@@ -39,6 +39,7 @@ class SubjectBase(object):
 
     # Aliases
     notify_listeners = notify
+    pub = publish = notify
 
 
 def observe(subject):
@@ -74,6 +75,7 @@ def notification_after(subject, *args, **kwargs):
      
 # Aliases
 subject = SubjectBase
+sub = subscribe = observe
 SubjectBase.observers = notification
 SubjectBase.before = notification_before
 SubjectBase.after = notification_after
