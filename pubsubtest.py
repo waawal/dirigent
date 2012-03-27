@@ -1,6 +1,6 @@
 from dirigent import pubsub
 
-q = pubsub()
+events = pubsub()
 
 def a(*args, **kwargs):
     print "a:", args, kwargs
@@ -8,15 +8,15 @@ def a(*args, **kwargs):
 def b(*args, **kwargs):
     print "b:", args, kwargs
 
-@q.sub
+@events.sub
 def c(*args, **kwargs):
     print "c:", args, kwargs
 
-@q.sub
+@events.sub
 def d(*args, **kwargs):
     print "d:", args, kwargs
 
-q.sub(a)
-q.sub(b)
+events.sub(a)
+events.sub(b)
 
-q.pub("hello", world="sa")
+events.pub("Hi!", hello="world!")
