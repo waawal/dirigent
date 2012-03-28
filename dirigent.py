@@ -1,6 +1,7 @@
 from contextlib import contextmanager
 from functools import partial
-
+import gevent
+import pdb
 
 class SubjectBase(object):
     """ Object holding all the observers, aliased to notify.
@@ -24,7 +25,7 @@ class SubjectBase(object):
     def notify(self, *args, **kwargs):
         """ Notifies all registered observers of a registered event.
         """
-        return [observer(*args, **kwargs) for observer in self.observers]
+        [observer(*args, **kwargs) for observer in self.observers]
 
     def __iter__(self):
         return (observer for observer in self.observers)
@@ -59,9 +60,15 @@ def notification_after(subject, *args, **kwargs):
     finally:
         subject.notify(*args, **kwargs)
 
-     
 # Aliases
 subject = pubsub = SubjectBase
 SubjectBase.observers = notification
 SubjectBase.before = notification_before
 SubjectBase.after = notification_after
+
+class GeventSubject(SubjectBase):
+    
+    def pub(self, *args, **kwargs):
+        observers = [gevent.spawn(observer, *args, **kwargs)
+                     for observer in self.observers]
+        gevent.joinall(observers, timeout=None, raise_error=False)
