@@ -5,6 +5,7 @@ try:
 except ImportError:
     from dirigent.contrib.weakrefset import WeakSet
 
+
 class BaseSubject(object):
     """ Object holding all the observers, aliased to notify.
     """
@@ -35,10 +36,6 @@ class BaseSubject(object):
     def __call__(self, *args, **kwargs):
         return (partial(observer, *args, **kwargs) for observer in self.observers)
 
-    # Aliases
-    #observe = sub = subscribe = register
-    #notify_listeners = pub = publish = notify
-
 
 @contextmanager
 def notification(subject, *args, **kwargs):
@@ -61,10 +58,3 @@ def notification_after(subject, *args, **kwargs):
         yield
     finally:
         subject.notify(*args, **kwargs)
-
-# Aliases
-#subject = pubsub = SubjectBase
-#SubjectBase.observers = notification
-#SubjectBase.before = notification_before
-#SubjectBase.after = notification_after
-
