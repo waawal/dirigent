@@ -1,8 +1,5 @@
 from contextlib import contextmanager
 from functools import partial
-import gevent
-import tornado.gen
-#import tornado.web
 
 class SubjectBase(object):
     """ Object holding all the observers, aliased to notify.
@@ -67,20 +64,3 @@ subject = pubsub = SubjectBase
 #SubjectBase.before = notification_before
 #SubjectBase.after = notification_after
 
-class GeventSubject(SubjectBase):
-    
-    def notify(self, *args, **kwargs):
-        [gevent.spawn(observer, *args, **kwargs) for observer in self.observers]
-
-class TornadoSubject(SubjectBase):
-
-#    def __init__(self, io_loop=None):
-#        self.io_loop = io_loop or tornado.ioloop.IOLoop.instance()
-
-    #@tornado.web.asynchronous
-    @tornado.gen.engine
-    def notify(self, *args, **kwargs):
-        yield [tornado.gen.Task(observer, *args, **kwargs) for observer in self.observers]
-
-    def callback(self, result):
-        pass
