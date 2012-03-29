@@ -1,1 +1,1 @@
-import geventsubject
+from geventbackend import GeventSubject

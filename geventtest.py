@@ -1,4 +1,4 @@
-from dirigent.async.geventbackend import GeventSubject
+from dirigent.async import GeventSubject
 import gevent
 import random
 

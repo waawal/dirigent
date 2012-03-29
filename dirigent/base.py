@@ -1,7 +1,7 @@
 from contextlib import contextmanager
 from functools import partial
 
-class SubjectBase(object):
+class BaseSubject(object):
     """ Object holding all the observers, aliased to notify.
     """
     def __init__(self):
@@ -59,7 +59,7 @@ def notification_after(subject, *args, **kwargs):
         subject.notify(*args, **kwargs)
 
 # Aliases
-subject = pubsub = SubjectBase
+#subject = pubsub = SubjectBase
 #SubjectBase.observers = notification
 #SubjectBase.before = notification_before
 #SubjectBase.after = notification_after
