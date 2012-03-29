@@ -8,8 +8,11 @@ except ImportError:
 class BaseSubject(object):
     """ Object holding all the observers, aliased to notify.
     """
-    def __init__(self, init):
-        self.observers = WeakSet(init)
+    def __init__(self, init=None):
+        if init:
+            self.observers = WeakSet(init)
+        else:
+            self.observers = WeakSet()
 
     def register(self, func):
         """ Register a callback for a event
