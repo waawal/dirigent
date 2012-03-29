@@ -1,11 +1,15 @@
 from contextlib import contextmanager
 from functools import partial
+try:
+    from weakref import WeakSet
+except ImportError:
+    from dirigent.contrib.weakrefset import WeakSet
 
 class BaseSubject(object):
     """ Object holding all the observers, aliased to notify.
     """
     def __init__(self):
-        self.observers = set()
+        self.observers = WeakSet()
 
     def register(self, func):
         """ Register a callback for a event
