@@ -58,3 +58,6 @@ def notification_after(subject, *args, **kwargs):
         yield
     finally:
         subject.notify(*args, **kwargs)
+
+# Aliases
+subject = BaseSubject

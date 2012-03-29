@@ -1,4 +1,1 @@
-from base import BaseSubject
-
-# Aliases
-subject = BaseSubject
+from base import subject
