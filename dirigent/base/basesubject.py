@@ -1,3 +1,4 @@
+""" The default Subject-class based on a WeakSet storage. """
 from functools import partial
 try:
     from weakref import WeakSet
@@ -6,7 +7,7 @@ except ImportError:
 
 
 class BaseSubject(object):
-    """ Object holding all the observers, aliased to notify.
+    """ Object holding all the observers, aliased to dirigent.subject
     """
     def __init__(self, init=None):
         if init:
@@ -15,20 +16,20 @@ class BaseSubject(object):
             self.observers = WeakSet()
 
     def register(self, func):
-        """ Register a callback for a event
-        Can be used as a decorator.
+        """ Registers a callable.
+            Can be used as a decorator.
         """
         self.observers.add(func)
         return func
 
     def unregister(self, func):
-        """ Unregisters a event.
+        """ Unregisters a callable.
         """
         if func in self.observers:
             self.observers.remove(func)
 
     def notify(self, *args, **kwargs):
-        """ Notifies all registered observers of a registered event.
+        """ Notifies all registered observers of an event.
         """
         [observer(*args, **kwargs) for observer in self.observers]
 
