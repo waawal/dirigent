@@ -1,6 +1,7 @@
+from dirigent.base import BaseSubject
 import rq
 
-class GeventSubject(BaseSubject):
+class RQSubject(BaseSubject):
 
     def notify(self, *args, **kwargs):
         rq.use_connection()
