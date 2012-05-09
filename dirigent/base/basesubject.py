@@ -1,5 +1,4 @@
 """ The default Subject-class based on a WeakSet storage. """
-from functools import partial
 try:
     from weakref import WeakSet
 except ImportError:
@@ -36,5 +35,4 @@ class BaseSubject(object):
     def __iter__(self):
         return (observer for observer in self.observers)
 
-    def __call__(self, *args, **kwargs):
-        return (partial(observer, *args, **kwargs) for observer in self.observers)
+    __call__ = notify
