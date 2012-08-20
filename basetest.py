@@ -1,8 +1,8 @@
-from dirigent import subject
+from dirigent import Subject
 import random
 import time
 
-events = subject()
+events = Subject()
 
 @events.register
 def a(*args, **kwargs):

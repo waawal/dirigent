@@ -1,4 +1,5 @@
 from basesubject import BaseSubject
+from hardrefsubject import HardRefSubject
 
 # Aliases
-subject = BaseSubject
+Subject = BaseSubject
