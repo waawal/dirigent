@@ -1,2 +1,8 @@
-import geventbackend as gevent
-import rqbackend as rq
+try:
+	import geventbackend as gevent
+except ImportError:
+	pass
+try:
+	import rqbackend as rq
+except ImportError:
+	pass
