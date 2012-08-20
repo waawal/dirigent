@@ -1,2 +1,2 @@
-from geventbackend import GeventSubject
-from rqbackend import RQSubject
+import geventbackend as gevent
+import rqbackend as rq

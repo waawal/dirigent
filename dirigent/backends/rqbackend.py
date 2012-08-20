@@ -9,3 +9,6 @@ class RQSubject(BaseSubject):
     def notify(self, *args, **kwargs):
         [self.q.enqueue(observer, *args, **kwargs)
          for observer in self.observers]
+
+# Alias
+Subject = RQSubject

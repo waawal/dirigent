@@ -1,9 +1,9 @@
-from dirigent.backends import GeventSubject
+from dirigent.backends.gevent import Subject
 import gevent
 import random
 
 
-events = GeventSubject()
+events = Subject()
 
 @events.register
 def a(*args, **kwargs):
