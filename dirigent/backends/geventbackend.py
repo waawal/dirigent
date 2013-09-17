@@ -4,7 +4,7 @@ import gevent
 class GeventSubject(BaseSubject):
 
     def notify(self, *args, **kwargs):
-        [gevent.spawn(observer, *args, **kwargs) for observer in self.observers]
+        return [gevent.spawn(observer, *args, **kwargs).value for observer in self.observers]
 
 # Alias
 Subject = GeventSubject
