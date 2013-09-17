@@ -35,7 +35,7 @@ def d(*args, **kwargs):
 
 
 for i, _ in enumerate(xrange(5)):
-    print events.notify(i, hello="world!")
-    print "Moving on..."
-    gevent.sleep(1)
+    events.notify(i, hello="world!")
+    #print "Moving on..."
+    #gevent.sleep(1)
 gevent.sleep(3)
