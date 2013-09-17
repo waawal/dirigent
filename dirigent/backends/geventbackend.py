@@ -1,10 +1,11 @@
-from dirigent.base import BaseSubject
+from ..base import BaseSubject
 import gevent
 
 class GeventSubject(BaseSubject):
 
     def notify(self, *args, **kwargs):
-        return [gevent.spawn(observer, *args, **kwargs).value for observer in self.observers]
+        for observer in self.observers:
+            gevent.spawn(observer, *args, **kwargs)
 
 # Alias
 Subject = GeventSubject
