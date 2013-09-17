@@ -26,13 +26,17 @@ class BaseSubject(object):
         """
         if func in self.observers:
             self.observers.remove(func)
+            return func
+        return False
 
     def notify(self, *args, **kwargs):
         """ Notifies all registered observers of an event.
         """
-        [observer(*args, **kwargs) for observer in self.observers]
+        return [observer(*args, **kwargs) for observer in self.observers]
 
     def __iter__(self):
         return (observer for observer in self.observers)
 
     __call__ = notify
+    on = bind = register
+    off = unbind = unregister
